@@ -1,46 +1,43 @@
-const transporter = require("../config/EmailConfig");
-const otpVerifyModel = require("../models/otpModel");
+const nodemailer = require("nodemailer");
+const Otp = require("../models/otpModel");
 
-const sendEmailVerificationOTP = async (req, user) => {
-  // Generate a random 4-digit OTP
-  const otp = Math.floor(1000 + Math.random() * 9000);
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+});
 
-  // Save OTP in Database
-  const userData = await new otpVerifyModel({
-    userId: user._id,
-    otp: otp,
-  }).save();
-  console.log("OTP Stored:", userData);
+// Send Email Verification OTP
+const sendEmailVerificationOTP = async (user) => {
+  const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
-  // Car & Bike Rental themed email
+  // Save OTP
+  await Otp.create({ userId: user._id, otp });
+
   await transporter.sendMail({
     from: `"DriveWell Rentals" <${process.env.EMAIL_USER}>`,
     to: user.email,
-    subject: "🚘 Verify Your DriveWell Account - OTP Inside!",
-    html: `
-      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <h2 style="color: #007bff;">Hello ${user.name}! 👋</h2>
-        <p>Welcome to <strong>DriveWell Rentals</strong> – your trusted partner for <em>cars & bikes on the go</em>.</p>
-        
-        <p>Before you hit the road, we just need to verify your email. Please use the following one-time password (OTP):</p>
-        
-        <div style="text-align: center; margin: 20px 0;">
-          <h1 style="background: #007bff; color: white; display: inline-block; padding: 10px 20px; border-radius: 8px; letter-spacing: 3px;">
-            ${otp}
-          </h1>
-        </div>
-        
-        <p>This OTP is valid for <strong>15 minutes</strong>. Please don’t share it with anyone.</p>
-        
-        <p>If you didn’t create an account with <strong>DriveWell Rentals</strong>, you can safely ignore this email.</p>
-        
-        <hr style="margin: 20px 0;">
-        <p style="font-size: 14px; color: #777;">Drive safe, ride easy 🚗🏍️<br/>- The DriveWell Team</p>
-      </div>
-    `,
+    subject: "Verify Your DriveWell Account",
+    html: `<h3>Hello ${user.name}</h3>
+           <p>Your OTP is: <b>${otp}</b>. It expires in 15 minutes.</p>`,
   });
 
   return otp;
 };
 
-module.exports = sendEmailVerificationOTP;
+// Send Password Reset OTP
+const sendPasswordResetOTP = async (user) => {
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  await Otp.create({ userId: user._id, otp });
+
+  await transporter.sendMail({
+    from: `"DriveWell Rentals" <${process.env.EMAIL_USER}>`,
+    to: user.email,
+    subject: "Password Reset OTP",
+    html: `<h3>Hello ${user.name}</h3>
+           <p>Your OTP for password reset is: <b>${otp}</b>. It expires in 15 minutes.</p>`,
+  });
+
+  return otp;
+};
+
+module.exports = { sendEmailVerificationOTP, sendPasswordResetOTP };

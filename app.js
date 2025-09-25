@@ -26,7 +26,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // in case form-data JSON fields
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // API Routes
