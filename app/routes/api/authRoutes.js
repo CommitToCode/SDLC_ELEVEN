@@ -23,8 +23,6 @@ const router = express.Router();
  *   post:
  *     summary: Register a new user with email verification
  *     tags: [Auth]
- *     consumes:
- *       - multipart/form-data
  *     requestBody:
  *       required: true
  *       content:
@@ -56,6 +54,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
+
 router.post(
   "/signup",
   (req, res, next) => {
