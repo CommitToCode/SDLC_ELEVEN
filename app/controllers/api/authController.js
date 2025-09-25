@@ -15,13 +15,15 @@ const signupSchema = Joi.object({
     .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/)
     .required(),
   licenseNumber: Joi.string().required(),
-  licenseFile: Joi.string().optional(),
+  
   isLicenseVerified: Joi.boolean().optional(),
 });
 
 // ===================== SIGNUP =====================
 exports.signup = async (req, res) => {
   try {
+     console.log("req.body:", req.body);
+    console.log("req.file:", req.file);
     const { error } = signupSchema.validate(req.body);
     if (error) return res.status(400).json({ status: false, message: error.details[0].message });
 
