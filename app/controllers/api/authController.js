@@ -1,10 +1,10 @@
-const User = require("../models/User");
-const Otp = require("../models/otpModel");
+const User = require("../../models/User");
+const Otp = require("../../models/otpModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const Joi = require("joi");
-const { sendEmailVerificationOTP, sendPasswordResetOTP } = require("../helper/sendOtp");
+const { sendEmailVerificationOTP, sendPasswordResetOTP } = require("../../helper/sendOtpVerify");
 
 // Validation Schema
 const signupSchema = Joi.object({
