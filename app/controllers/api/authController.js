@@ -2,7 +2,7 @@ const User = require("../../models/User");
 const Otp = require("../../models/otpModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { sendEmailVerificationOTP, sendPasswordResetOTP } = require("../../helper/emailHelper");
+const { sendEmailVerificationOTP, sendPasswordResetOTP } = require("../../helper/sendOtpVerify");
 
 // ===================== SIGNUP =====================
 exports.signup = async (req, res) => {
