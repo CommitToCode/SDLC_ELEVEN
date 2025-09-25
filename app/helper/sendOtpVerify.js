@@ -13,7 +13,7 @@ exports.sendEmailVerificationOTP = async (user) => {
 
     await transporter.sendMail({
       from: `"DriveWell Rentals" <${process.env.EMAIL_USER}>`,
-      to: user.email,
+      to: email,
       subject: "Verify Your DriveWell Account",
       html: `<h3>Hello ${user.name}</h3><p>Your OTP: <b>${otp}</b> (expires in 15 min)</p>`
     });
