@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true },
     licenseNumber: { type: String, required: true },
-    licenseFile: { type: String, default: null },
+    licenseFile: { type: String },
     isLicenseVerified: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
     verificationToken: { type: String },
