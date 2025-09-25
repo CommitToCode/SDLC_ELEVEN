@@ -29,11 +29,6 @@ const router = express.Router();
  *         multipart/form-data:
  *           schema:
  *             type: object
- *             required:
- *               - name
- *               - email
- *               - password
- *               - licenseNumber
  *             properties:
  *               name:
  *                 type: string
@@ -51,16 +46,14 @@ const router = express.Router();
  *               licenseFile:
  *                 type: string
  *                 format: binary
- *                 description: Upload license image (jpg, png, pdf, optional)
  *     responses:
- *       "201":
+ *       201:
  *         description: User registered successfully
- *       "400":
- *         description: Validation error or invalid file
- *       "500":
+ *       400:
+ *         description: Validation error
+ *       500:
  *         description: Server error
  */
-// Multer error handling wrapper to prevent Swagger UI hang
 router.post(
   "/signup",
   (req, res, next) => {
@@ -86,9 +79,6 @@ router.post(
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - email
- *               - otp
  *             properties:
  *               email:
  *                 type: string
@@ -100,9 +90,7 @@ router.post(
  *       200:
  *         description: Email verified successfully
  *       400:
- *         description: Invalid or expired OTP
- *       500:
- *         description: Server error
+ *         description: Invalid OTP
  */
 router.post("/verify", verifyEmail);
 
@@ -118,24 +106,18 @@ router.post("/verify", verifyEmail);
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - email
- *               - password
  *             properties:
  *               email:
  *                 type: string
  *                 example: somnath@gmail.com
  *               password:
  *                 type: string
- *                 minLength: 8
  *                 example: Passw0rd@
  *     responses:
  *       200:
  *         description: Login successful
  *       400:
  *         description: Invalid credentials
- *       500:
- *         description: Server error
  */
 router.post("/login", login);
 
@@ -151,19 +133,15 @@ router.post("/login", login);
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - email
  *             properties:
  *               email:
  *                 type: string
  *                 example: somnath@gmail.com
  *     responses:
  *       200:
- *         description: OTP sent for password reset
+ *         description: OTP sent
  *       404:
  *         description: User not found
- *       500:
- *         description: Server error
  */
 router.post("/forgot-password", forgotPassword);
 
@@ -179,30 +157,20 @@ router.post("/forgot-password", forgotPassword);
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - email
- *               - otp
- *               - newPassword
  *             properties:
  *               email:
  *                 type: string
- *                 example: somnath@gmail.com
  *               otp:
  *                 type: string
- *                 example: "123456"
  *               newPassword:
  *                 type: string
- *                 minLength: 8
- *                 example: NewPassw0rd@
  *     responses:
  *       200:
  *         description: Password reset successful
  *       400:
- *         description: Invalid or expired OTP
+ *         description: Invalid OTP
  *       404:
  *         description: User not found
- *       500:
- *         description: Server error
  */
 router.post("/reset-password", resetPassword);
 
