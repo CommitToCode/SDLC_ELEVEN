@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const Otp = require("../models/otpModel");
+const User = require("../models/User");
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
@@ -13,7 +14,7 @@ exports.sendEmailVerificationOTP = async (user) => {
 
     await transporter.sendMail({
       from: `"DriveWell Rentals" <${process.env.EMAIL_USER}>`,
-      to: email,
+      to: User.email,
       subject: "Verify Your DriveWell Account",
       html: `<h3>Hello ${user.name}</h3><p>Your OTP: <b>${otp}</b> (expires in 15 min)</p>`
     });
