@@ -1,6 +1,5 @@
 const nodemailer = require("nodemailer");
 const Otp = require("../models/otpModel");
-const User = require("../models/User");
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
@@ -14,11 +13,12 @@ exports.sendEmailVerificationOTP = async (user) => {
 
     await transporter.sendMail({
       from: `"DriveWell Rentals" <${process.env.EMAIL_USER}>`,
-      to: User.email,
+      to: user.email, 
       subject: "Verify Your DriveWell Account",
       html: `<h3>Hello ${user.name}</h3><p>Your OTP: <b>${otp}</b> (expires in 15 min)</p>`
     });
 
+    console.log("Email OTP sent to:", user.email, otp);
     return otp;
   } catch (err) {
     console.error("Email OTP error:", err);
@@ -38,6 +38,7 @@ exports.sendPasswordResetOTP = async (user) => {
       html: `<h3>Hello ${user.name}</h3><p>Your OTP for reset: <b>${otp}</b> (expires in 15 min)</p>`
     });
 
+    console.log("Password reset OTP sent to:", user.email, otp);
     return otp;
   } catch (err) {
     console.error("Password OTP error:", err);
