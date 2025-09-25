@@ -16,7 +16,7 @@ const options = {
     },
     servers: [
       {
-        url: "https://car-bike-rental.onrender.com",
+        url: "https://sdlc-eleven.onrender.com",
       },
       {
         url: "http://localhost:2809",
