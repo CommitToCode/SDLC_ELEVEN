@@ -55,18 +55,8 @@ const router = express.Router();
  *         description: Server error
  */
 
-router.post(
-  "/signup",
-  (req, res, next) => {
-    upload.single("licenseFile")(req, res, (err) => {
-      if (err) {
-        return res.status(400).json({ status: false, message: err.message });
-      }
-      next();
-    });
-  },
-  signup
-);
+router.post("/signup", upload.single("licenseFile"), signup);
+
 
 /**
  * @swagger
