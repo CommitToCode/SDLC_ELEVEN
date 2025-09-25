@@ -38,7 +38,7 @@ exports.signup = async (req, res) => {
       email,
       password: hashedPassword,
       licenseNumber,
-      licenseFile: req.file ? req.file.path : null,
+      licenseFile: req.file ? req.file.filename : null,
       isLicenseVerified,
       verificationToken,
     });
