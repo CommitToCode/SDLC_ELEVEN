@@ -29,12 +29,16 @@ const signupSchema = Joi.object({
         "Password must be at least 8 characters and include 1 uppercase, 1 lowercase, 1 number, and 1 special character",
       "string.empty": "Password is required",
     }),
-  licenseNumber: Joi.string().required().messages({
-    "string.empty": "License number is required",
-  }),
+
+  licenseNumber: Joi.string().required(),
+
+  licenseNumber: Joi.string().optional(),
+  licenseFile: Joi.string().optional(),
+  isLicenseVerified: Joi.boolean().optional(),
 });
 
 // ===================== SIGNUP =====================
+
 // exports.signup = async (req, res) => {
 //   try {
 //     const { error } = signupSchema.validate(req.body);
@@ -44,7 +48,14 @@ const signupSchema = Joi.object({
 //         .json({ status: false, message: error.details[0].message });
 //     }
 
-//     const { name, email, password, licenseNumber, licenseFile } = req.body;
+//     const {
+//       name,
+//       email,
+//       password,
+//       licenseNumber,
+//       licenseFile,
+//       isLicenseVerified,
+//     } = req.body;
 
 //     let existingUser = await User.findOne({ email });
 //     if (existingUser) {
@@ -61,7 +72,8 @@ const signupSchema = Joi.object({
 //       email,
 //       password: hashedPassword,
 //       licenseNumber,
-//       licenseFile: req.file ? req.file.path : null,
+//       licenseFile,
+//       isLicenseVerified,
 //       verificationToken,
 //     });
 
@@ -78,9 +90,6 @@ const signupSchema = Joi.object({
 //         name: data.name,
 //         email: data.email,
 //         license: data.licenseNumber,
-
-//         licenseFile: data.licenseFile,
-
 //         isVerified: data.isVerified,
 //       },
 //     });
@@ -89,6 +98,11 @@ const signupSchema = Joi.object({
 //     res.status(500).json({ status: false, message: "Server error" });
 //   }
 // };
+
+
+
+
+
 exports.signup = async (req, res) => {
   try {
     const { error } = signupSchema.validate(req.body);
@@ -98,7 +112,15 @@ exports.signup = async (req, res) => {
         .json({ status: false, message: error.details[0].message });
     }
 
-    const { name, email, password, licenseNumber } = req.body;
+    const {
+      name,
+      email,
+      password,
+      licenseNumber,
+      licenseFile,
+
+      isLicenseVerified,
+    } = req.body;
 
     let existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -115,11 +137,17 @@ exports.signup = async (req, res) => {
       email,
       password: hashedPassword,
       licenseNumber,
+
       licenseFile: req.file ? req.file.path : null, 
+
+      licenseFile,
+
+      isLicenseVerified,
       verificationToken,
     });
 
     const data = await user.save();
+
     await sendEmailVerificationOTP(req, user);
 
     res.status(201).json({
@@ -130,8 +158,10 @@ exports.signup = async (req, res) => {
         id: data._id,
         name: data.name,
         email: data.email,
-        licenseNumber: data.licenseNumber,
+        license: data.licenseNumber,
+
         licenseFile: data.licenseFile,
+
         isVerified: data.isVerified,
       },
     });
@@ -140,6 +170,15 @@ exports.signup = async (req, res) => {
     res.status(500).json({ status: false, message: "Server error" });
   }
 };
+
+
+
+
+
+
+
+
+
 
 
 // ===================== VERIFY EMAIL =====================
