@@ -23,6 +23,8 @@ const router = express.Router();
  *   post:
  *     summary: Register a new user with email verification
  *     tags: [Auth]
+ *     consumes:
+ *       - multipart/form-data
  *     requestBody:
  *       required: true
  *       content:
@@ -91,6 +93,8 @@ router.post(
  *         description: Email verified successfully
  *       400:
  *         description: Invalid OTP
+ *       404:
+ *         description: User not found
  */
 router.post("/verify", verifyEmail);
 
@@ -118,6 +122,8 @@ router.post("/verify", verifyEmail);
  *         description: Login successful
  *       400:
  *         description: Invalid credentials
+ *       404:
+ *         description: User not found
  */
 router.post("/login", login);
 
@@ -160,10 +166,13 @@ router.post("/forgot-password", forgotPassword);
  *             properties:
  *               email:
  *                 type: string
+ *                 example: somnath@gmail.com
  *               otp:
  *                 type: string
+ *                 example: "123456"
  *               newPassword:
  *                 type: string
+ *                 example: NewPassw0rd@
  *     responses:
  *       200:
  *         description: Password reset successful
