@@ -1,4 +1,6 @@
 const express = require("express");
+const upload = require("../../middleware/upload");
+
 const {
   signup,
   verifyEmail,
@@ -6,7 +8,7 @@ const {
   forgotPassword,
   resetPassword,
 } = require("../../controllers/api/authController");
-const upload = require("../../middleware/upload");
+
 
 const router = express.Router();
 
