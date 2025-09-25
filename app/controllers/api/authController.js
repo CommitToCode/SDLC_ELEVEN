@@ -26,7 +26,7 @@ exports.signup = async (req, res) => {
     if (error) return res.status(400).json({ status: false, message: error.details[0].message });
 
     const { name, email, password, licenseNumber, isLicenseVerified } = req.body;
-    const licenseFile=  req.file.filename 
+const licenseFile = req.file ? req.file.filename : null;
 
     let existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ status: false, message: "Email already registered" });
