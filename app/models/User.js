@@ -24,8 +24,7 @@ const userSchema = new mongoose.Schema(
 
     licenseFile: {
       type: String,
-      trim: true,
-      default: null,
+
     },
     isLicenseVerified: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
