@@ -1,4 +1,6 @@
 const express = require("express");
+const router = express.Router();
+
 const upload = require("../../middleware/upload");
 
 const {
@@ -9,8 +11,6 @@ const {
   resetPassword,
 } = require("../../controllers/api/authController");
 
-
-const router = express.Router();
 
 /**
  * @swagger
@@ -28,7 +28,7 @@ const router = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -36,6 +36,7 @@ const router = express.Router();
  *               - email
  *               - password
  *               - licenseNumber
+ *               - licenseFile
  *             properties:
  *               name:
  *                 type: string
@@ -50,6 +51,9 @@ const router = express.Router();
  *               licenseNumber:
  *                 type: string
  *                 example: DL-123456789
+ *               licenseFile:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: User registered successfully
