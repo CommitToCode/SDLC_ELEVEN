@@ -1,13 +1,11 @@
-// helper/emailSetup.js
 const nodemailer = require("nodemailer");
 const Otp = require("../models/otpModel");
 const crypto = require("crypto");
 
-// =============== EMAIL TRANSPORTER SETUP ===============
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,   // e.g., "smtp.gmail.com"
-  port: process.env.EMAIL_PORT,   // e.g., 587
-  secure: false,                  // true for 465, false for 587
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -17,17 +15,21 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// =============== OTP GENERATOR ===============
-const generateOTP = () => {
-  return crypto.randomInt(100000, 999999).toString(); // 6-digit OTP
-};
+// Test connection
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("SMTP connection error:", error);
+  } else {
+    console.log("SMTP server is ready to send messages");
+  }
+});
+
+const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
 // =============== SEND EMAIL VERIFICATION OTP ===============
 exports.sendEmailVerificationOTP = async (user) => {
   try {
     const otp = generateOTP();
-
-    // save OTP in DB
     await Otp.create({
       userId: user._id,
       otp,
@@ -36,7 +38,7 @@ exports.sendEmailVerificationOTP = async (user) => {
     });
 
     const mailOptions = {
-      from: `"Auth System" <${process.env.EMAIL_USER}>`,
+      from: process.env.EMAIL_FROM,
       to: user.email,
       subject: "Verify Your Email",
       html: `
@@ -48,7 +50,7 @@ exports.sendEmailVerificationOTP = async (user) => {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Email verification OTP sent to:", user.email);
+    console.log("Verification OTP sent to:", user.email);
   } catch (err) {
     console.error("Error sending email verification OTP:", err);
   }
@@ -58,8 +60,6 @@ exports.sendEmailVerificationOTP = async (user) => {
 exports.sendPasswordResetOTP = async (user) => {
   try {
     const otp = generateOTP();
-
-    // save OTP in DB
     await Otp.create({
       userId: user._id,
       otp,
@@ -68,7 +68,7 @@ exports.sendPasswordResetOTP = async (user) => {
     });
 
     const mailOptions = {
-      from: `"Auth System" <${process.env.EMAIL_USER}>`,
+      from: process.env.EMAIL_FROM,
       to: user.email,
       subject: "Password Reset Request",
       html: `
