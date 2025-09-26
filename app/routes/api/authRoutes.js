@@ -31,6 +31,12 @@ const router = express.Router();
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *               - licenseNumber
+ *               - licenseFile
  *             properties:
  *               name:
  *                 type: string
@@ -56,6 +62,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
+
 
 router.post("/signup", upload.single("licenseFile"), signup);
 
