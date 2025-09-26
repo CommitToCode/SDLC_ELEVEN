@@ -31,15 +31,20 @@ exports.signup = async (req, res) => {
     // Send OTP after signup
     await sendEmailVerificationOTP(user);
 
+    // Send JSON response with user info (excluding password)
+    const { password: pw, ...userData } = user.toObject();
+
     res.status(201).json({
       status: true,
       message: "Signup success. Please check your email for OTP verification.",
+      user: userData,
     });
   } catch (err) {
     console.error("Signup error:", err);
     res.status(500).json({ status: false, message: "Server error" });
   }
 };
+
 
 // ===================== VERIFY EMAIL =====================
 exports.verifyEmail = async (req, res) => {
