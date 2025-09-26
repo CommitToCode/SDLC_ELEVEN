@@ -18,7 +18,7 @@ app.set("views", path.join(__dirname, "views"));
 // Middlewares
 app.use(
   cors({
-    origin: ["http://localhost:2809", "https://car-bike-rental.onrender.com"],
+    origin: ["http://localhost:2809", "https://sdlc-eleven.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
