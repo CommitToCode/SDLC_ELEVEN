@@ -28,7 +28,7 @@ const router = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             required:
@@ -36,7 +36,6 @@ const router = express.Router();
  *               - email
  *               - password
  *               - licenseNumber
- *               - licenseFile
  *             properties:
  *               name:
  *                 type: string
@@ -51,9 +50,6 @@ const router = express.Router();
  *               licenseNumber:
  *                 type: string
  *                 example: DL-123456789
- *               licenseFile:
- *                 type: string
- *                 format: binary
  *     responses:
  *       201:
  *         description: User registered successfully
