@@ -54,7 +54,7 @@ const {
  *               licenseFile:
  *                 type: string
  *                 format: binary
- *  required: false
+ *                   required: false
  *     responses:
  *       201:
  *         description: User registered successfully
