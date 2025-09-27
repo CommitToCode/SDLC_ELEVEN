@@ -36,6 +36,7 @@ const {
  *               - email
  *               - password
  *               - licenseNumber
+ *               - licenseFile
  *             properties:
  *               name:
  *                 type: string
@@ -53,7 +54,13 @@ const {
  *               licenseFile:
  *                 type: string
  *                 format: binary
- *                 description: Optional license file upload
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: Validation error
+ *       500:
+ *         description: Server error
  */
 
 
