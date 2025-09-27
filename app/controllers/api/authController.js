@@ -8,40 +8,24 @@ const { sendEmailVerificationOTP, sendPasswordResetOTP } = require("../../helper
 exports.signup = async (req, res) => {
   try {
     const { name, email, password, licenseNumber } = req.body;
-    const licenseFile = req.file ? req.file.filename : null;
-
-    if (!name || !email || !password || !licenseNumber) {
+    if (!name || !email || !password || !licenseNumber)
       return res.status(400).json({ status: false, message: "All fields required" });
-    }
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    if (existingUser)
       return res.status(400).json({ status: false, message: "Email already exists" });
-    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      licenseNumber,
-      licenseFile,
+      name, email, password: hashedPassword, licenseNumber, licenseFile: req.file?.filename
     });
 
-    // Send OTP after signup
     await sendEmailVerificationOTP(user);
 
-    // Send JSON response with user info (excluding password)
     const { password: pw, ...userData } = user.toObject();
-
-    res.status(201).json({
-      status: true,
-      message: "Signup success. Please check your email for OTP verification.",
-      user: userData,
-
-    });
+    res.status(201).json({ status: true, message: "Signup success. Check email for OTP.", user: userData });
   } catch (err) {
-    console.error("Signup error:", err);
+    console.error("Signup Error:", err);
     res.status(500).json({ status: false, message: "Server error" });
   }
 };
