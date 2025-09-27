@@ -38,6 +38,7 @@ exports.signup = async (req, res) => {
       status: true,
       message: "Signup success. Please check your email for OTP verification.",
       user: userData,
+
     });
   } catch (err) {
     console.error("Signup error:", err);

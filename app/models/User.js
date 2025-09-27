@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     licenseNumber: { type: String, required: true },
     licenseFile: { type: String },
     isLicenseVerified: { type: Boolean, default: false },
+    
     verificationToken: { type: String },
   },
   { timestamps: true }
