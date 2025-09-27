@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const Otp = require("../models/Otp");
+const Otp = require("../models/otpModel");
 const crypto = require("crypto");
 
 const transporter = nodemailer.createTransport({
