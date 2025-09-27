@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const Otp = require("../models/otpModel");
+const Otp = require("../models/Otp");
 const crypto = require("crypto");
 
 const transporter = nodemailer.createTransport({
@@ -10,78 +10,72 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  tls: {
-    rejectUnauthorized: false,
-  },
+  tls: { rejectUnauthorized: false },
 });
 
-// Test connection
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("SMTP connection error:", error);
-  } else {
-    console.log("SMTP server is ready to send messages");
-  }
+transporter.verify((err, success) => {
+  if (err) console.error("SMTP Error:", err);
+  else console.log("SMTP Ready ✅");
 });
 
 const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
-// =============== SEND EMAIL VERIFICATION OTP ===============
-exports.sendEmailVerificationOTP = async (user) => {
+async function sendEmailVerificationOTP(user) {
   try {
     const otp = generateOTP();
+
     await Otp.create({
       userId: user._id,
       otp,
       purpose: "emailVerification",
-      createdAt: new Date(),
     });
 
-    const mailOptions = {
-      from: process.env.EMAIL_FROM,
+    await transporter.sendMail({
+      from: `"Car Rental App" <${process.env.EMAIL_FROM}>`,
       to: user.email,
       subject: "Verify Your Email",
       html: `
-        <h2>Hello ${user.name},</h2>
-        <p>Thank you for signing up! Please verify your email using the OTP below:</p>
+        <h2>Hello ${user.name}</h2>
+        <p>Thank you for signing up! Use the OTP below to verify your email:</p>
         <h3 style="color:blue;">${otp}</h3>
-        <p>This OTP will expire in <b>10 minutes</b>.</p>
+        <p>This OTP expires in 10 minutes.</p>
       `,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
-    console.log("Verification OTP sent to:", user.email);
+    console.log("✅ Verification OTP sent to:", user.email);
   } catch (err) {
-    console.error("Error sending email verification OTP:", err);
+    console.error("❌ Error sending verification email:", err);
+    throw err;
   }
-};
+}
 
-// =============== SEND PASSWORD RESET OTP ===============
-exports.sendPasswordResetOTP = async (user) => {
+async function sendPasswordResetOTP(user) {
   try {
     const otp = generateOTP();
+
     await Otp.create({
       userId: user._id,
       otp,
       purpose: "passwordReset",
-      createdAt: new Date(),
     });
 
-    const mailOptions = {
-      from: process.env.EMAIL_FROM,
+    await transporter.sendMail({
+      from: `"Car Rental App" <${process.env.EMAIL_FROM}>`,
       to: user.email,
-      subject: "Password Reset Request",
+      subject: "Password Reset OTP",
       html: `
-        <h2>Hello ${user.name},</h2>
-        <p>You requested to reset your password. Use the OTP below to proceed:</p>
+        <h2>Hello ${user.name}</h2>
+        <p>Use the OTP below to reset your password:</p>
         <h3 style="color:red;">${otp}</h3>
-        <p>This OTP will expire in <b>10 minutes</b>. If you did not request a password reset, please ignore this email.</p>
+        <p>This OTP expires in 10 minutes.</p>
       `,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
-    console.log("Password reset OTP sent to:", user.email);
+    console.log("✅ Password reset OTP sent to:", user.email);
   } catch (err) {
-    console.error("Error sending password reset OTP:", err);
+    console.error("❌ Error sending password reset email:", err);
+    throw err;
   }
-};
+}
+
+module.exports = { sendEmailVerificationOTP, sendPasswordResetOTP };
