@@ -2,16 +2,14 @@ const nodemailer = require("nodemailer");
 const Otp = require("../models/otpModel");
 
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: false, // 587 = false, 465 = true
+  host: 'smtp.gmail.com',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: 'drivewell10@gmail.com',
+    pass: 'xfiv okdn irsv tvqw' 
   },
   tls: {
-    rejectUnauthorized: false,
-  },
+    rejectUnauthorized: false
+  }
 });
 
 exports.sendEmailVerificationOTP = async (user) => {
