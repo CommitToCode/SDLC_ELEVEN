@@ -36,7 +36,6 @@ const {
  *               - email
  *               - password
  *               - licenseNumber
- *               - licenseFile
  *             properties:
  *               name:
  *                 type: string
