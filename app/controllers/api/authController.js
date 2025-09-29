@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const { sendEmailVerificationOTP, sendPasswordResetOTP } = require("../../helper/sendOtpVerify");
 
 // ===================== SIGNUP =====================
-c
+
 
 exports.signup = async (req, res) => {
   try {
