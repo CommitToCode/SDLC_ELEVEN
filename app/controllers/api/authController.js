@@ -5,28 +5,53 @@ const jwt = require("jsonwebtoken");
 const { sendEmailVerificationOTP, sendPasswordResetOTP } = require("../../helper/sendOtpVerify");
 
 // ===================== SIGNUP =====================
+const User = require("../../models/User");
+const Otp = require("../../models/otpModel");
+const bcrypt = require("bcryptjs");
+const { sendEmailVerificationOTP } = require("../../helper/sendOtpVerify");
+
 exports.signup = async (req, res) => {
   try {
     const { name, email, password, licenseNumber } = req.body;
-    if (!name || !email || !password || !licenseNumber)
+
+    // ✅ Validate all fields
+    if (!name || !email || !password || !licenseNumber) {
       return res.status(400).json({ status: false, message: "All fields required" });
+    }
 
+    // ✅ Check existing email
     const existingUser = await User.findOne({ email });
-    if (existingUser)
+    if (existingUser) {
       return res.status(400).json({ status: false, message: "Email already exists" });
+    }
 
+    // ✅ Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // ✅ Create user (handle optional image)
     const user = await User.create({
-      name, email, password: hashedPassword, licenseNumber, licenseFile: req.file?.filename
+      name,
+      email,
+      password: hashedPassword,
+      licenseNumber,
+      licenseFile: req.file ? req.file.filename : null, // ✅ fixed: safe for no image
     });
 
+    // ✅ Send OTP after saving user
     await sendEmailVerificationOTP(user);
 
+    // ✅ Remove password before sending response
     const { password: pw, ...userData } = user.toObject();
-    res.status(201).json({ status: true, message: "Signup success. Check email for OTP.", user: userData });
+
+    res.status(201).json({
+      status: true,
+      message: "Signup success. Check your email for OTP.",
+      user: userData,
+    });
+
   } catch (err) {
     console.error("Signup Error:", err);
-    res.status(500).json({ status: false, message: "Server error" });
+    res.status(500).json({ status: false, message: "Server error", error: err.message });
   }
 };
 
