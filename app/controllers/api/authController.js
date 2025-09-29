@@ -5,10 +5,7 @@ const jwt = require("jsonwebtoken");
 const { sendEmailVerificationOTP, sendPasswordResetOTP } = require("../../helper/sendOtpVerify");
 
 // ===================== SIGNUP =====================
-const User = require("../../models/User");
-const Otp = require("../../models/otpModel");
-const bcrypt = require("bcryptjs");
-const { sendEmailVerificationOTP } = require("../../helper/sendOtpVerify");
+c
 
 exports.signup = async (req, res) => {
   try {
